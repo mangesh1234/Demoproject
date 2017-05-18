@@ -6,6 +6,26 @@ server.use(restify.bodyParser());
 server.use(restify.queryParser());
 storage()
   .then(() => {
+    server.use(restify.requestLogger());
+    server.pre(restify.CORS({
+      // Defaults to ['*'].
+      // origins: ['http://192.168.0.121', 'http://localhost', 'http://admin.fcappservices.in'],
+
+      // Defaults to false.
+      credentials: true,
+
+      // Sets expose-headers.
+      headers: ['x-brainbees']
+    }));
+    // server.pre(restify.fullResponse());
+    server.use(restify.queryParser({
+      mapParams: false
+    }));
+    server.use(restify.bodyParser({
+      maxBodySize: 0, // 0 - No limit
+      mapParams: true //Maps the body params to req.params
+    }));
+
     function unknownMethodHandler(req, res) {
       if (req.method.toLowerCase() === 'options') {
         // added Origin & X-Requested-With & **Authorization**
@@ -49,11 +69,11 @@ storage()
 //    // should be a large unguessable string
 //    secret: 'yoursecret',
 //    // how long the session will stay valid in ms
-//    duration: 365 * 24 * 60 * 60 * 1000    
+//    duration: 365 * 24 * 60 * 60 * 1000
 //}));
 //
 //// Initialize passport
-//server.use(passport.initialize()); 
+//server.use(passport.initialize());
 //// Set up the passport session
 //server.use(passport.session());
 //
@@ -74,7 +94,7 @@ storage()
 //    if(username === 'john' && password === 'johnspassword') {
 //        return done(null, {id:123456, username:'john'});
 //    }
-//    
+//
 //    return done(null, false, { error: 'Incorrect username or password.' });
 //};
 //
@@ -99,7 +119,7 @@ storage()
 //
 //        // Log the user in!
 //        req.logIn(user, function(err) {
-//            if (err) { 
+//            if (err) {
 //                return next(err);
 //            }
 //            console.log(req.isAuthenticated());
@@ -109,7 +129,7 @@ storage()
 //                res.json({ success: 'Welcome ' + user.username + "!"});
 //                return next();
 //            }
-//            
+//
 //            res.json({ success: 'Welcome!'});
 //            return next();
 //        });
@@ -182,15 +202,15 @@ storage()
 //};
 //
 //io.set('authorization', function (handshakeData, accept) {
-//    
+//
 //    // Check that the cookie header is present
 //    if (!handshakeData.headers.cookie) {
 //        return accept('No cookie transmitted.', false);
 //    }
-//    
+//
 //    // Get all the cookie objects
 //    var cookie = parseCookie(handshakeData.headers.cookie);
-//    
+//
 //    // Pull out the user from the cookie by using the decode function
 //    handshakeData.sessionID = sessions.util.decode({cookieName: 'session', secret:'yoursecret'}, cookie['session']);
 //
@@ -201,7 +221,7 @@ storage()
 //    // Get the first key of the handshake data
 //    var firstKey = Object.keys(socket.manager.handshaken)[0];
 //    var userId = socket.manager.handshaken[firstKey].sessionID.content.user_id;
-//    
+//
 //    // Send a hello message with the user's id
 //    socket.emit('message', "Hey " + userId);
 //});
