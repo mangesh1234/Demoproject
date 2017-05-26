@@ -4,6 +4,7 @@ var restify = require('restify');
 var server = restify.createServer();
 server.use(restify.bodyParser());
 server.use(restify.queryParser());
+// server.set("view engine","jade");
 storage()
   .then(() => {
     server.use(restify.requestLogger());
