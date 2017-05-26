@@ -10,13 +10,12 @@ storage()
     server.use(restify.requestLogger());
     server.pre(restify.CORS({
       // Defaults to ['*'].
-      // origins: ['http://192.168.0.121', 'http://localhost', 'http://admin.fcappservices.in'],
 
       // Defaults to false.
       credentials: true,
 
       // Sets expose-headers.
-      headers: ['x-brainbees']
+      headers: ['x-about']
     }));
     // server.pre(restify.fullResponse());
     server.use(restify.queryParser({
